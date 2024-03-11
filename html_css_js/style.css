@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.cat-image {
+
+}
+
+#catId {
+  width: 900px;
+}
+
+.main-header {
+  display: inline-block;
+  font-size: xx-large;
+  font-weight: 900;
+  width: 1000px;
+  height: 300px;
+  background-color: #87ceeb;
+  color: #4b6491;
+  padding: 100px;
+  margin: 100px;
+  border: 10px solid pink;
+  text-align: center;
+  text-decoration: underline;
+  text-shadow: 10px 10px red;
+  box-shadow: 20px 20px black;
+  border-radius: 400px;
+  /*border-width: 10px;
+  border-style: dashed;
+  border-color: pink;*/
+}
+
+.sub-header {
+  display: inline-block;
+  width: 200px;
+  height: 300px;
+  background-color: lightgreen;
+  color: orangered
+}
