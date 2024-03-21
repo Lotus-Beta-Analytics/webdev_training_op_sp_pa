@@ -2,7 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Poppins'
+  font-family: 'Poppins';
 }
 
 .logo-img {
@@ -10,6 +10,7 @@
   margin-left: 40px;
 }
 
+/* Home Page */
 .main-content {
   height: 700px;
   background-image: linear-gradient(to right, #39462D, #39462d30), url("../img/background-img.png"); 
@@ -48,7 +49,6 @@
   margin-right: 20px;
 }
 
-
 .btn-container {
   margin-left: 40px;
   padding-top: 40px;
@@ -67,6 +67,82 @@
   border: none;
   border-radius: 5px;
 }
+
+.price-weather-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 40px;
+}
+.market-price-container {
+  /* border: 3px solid magenta */
+  background-color: #F8F8F8;
+  padding: 40px;
+}
+.prices {
+  padding-top: 20px;
+}
+.price-item {
+  display: grid;
+  /* grid-template-columns: repeat(5, 1fr); */
+  grid-template-columns: 1fr .5fr 1fr 1fr 1fr;
+  gap: 30px;
+}
+
+
+.weather-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 300px;
+  /* TODO: how to use filter properly */
+  background-image: linear-gradient(to right, #00000099, #00000099) , url("../img/bg-2.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  padding: 40px;
+  color: white;
+}
+
+.current-temperature {
+  font-size: 64px;
+  padding-top: 20px;
+}
+
+.forecast {
+  text-align: center;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  padding-top: 60px;
+}
+
+.forecast-item {
+  text-align: center;
+}
+/* Home Page */
+
+/* Dashboard Page */
+/* TODO: show alternative */
+.dashboard-topbar {
+  height: 200px;
+  background-image: linear-gradient(to right, #39462D, #39462d30), url("../img/background-img.png"); 
+  background-repeat: no-repeat;
+  background-position: center right;
+  /* background-size: contain; */
+  background-size: cover;
+  color: white;
+}
+
+.dashboard-topbar-text {
+  padding: 15px 40px;
+}
+
+.dashboard-header-text {
+  font-size: 64px;
+  line-height: 0.7;
+}
+/* Dashboard Page */
 
 /* .testing {
   display: flex;
