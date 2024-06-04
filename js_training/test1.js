@@ -101,3 +101,22 @@ console.log(students);
  * 2. get all students with a percentage score greater than or equal to 90
  * 3. get the average age of all students
  */
+
+const studentNames = students.map((student) => {
+  return student.name
+})
+console.log({studentNames})
+
+const highPerformingStudents = students.filter((student) => {
+  return  student.percentageScore >= 90;
+});
+console.log({highPerformingStudents})
+
+const averageAge = students.reduce((prev, student) => {
+  return prev + student.age
+}, 0)  / students.length
+
+console.log({averageAge})
+
+
+
