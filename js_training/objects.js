@@ -23,13 +23,14 @@ const detailedStudents = {
     },
   ],
   Test: testList,
+  "85test": "some value",
 };
 
 const key = "hobbies";
 
 console.log(detailedStudents.Test[0].name);
 console.log(detailedStudents.Test[0].key);
-console.log(testList[0]["age"]);
+console.log(testList[0] );
 console.log(testList[0][key]);
 // console.log(`name of first student in Test: ${detailedStudents.Test}`)
 // console.log(`name of first student in grade 8: ${detailedStudents}`)
