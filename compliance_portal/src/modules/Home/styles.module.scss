@@ -1,0 +1,10 @@
+// --primary-color: #c0d111;
+$primary-color: #9a198cdb;
+
+.background {
+  background: linear-gradient(to top, $primary-color, #9a198c00),
+    url("../../assets/bg-img.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
