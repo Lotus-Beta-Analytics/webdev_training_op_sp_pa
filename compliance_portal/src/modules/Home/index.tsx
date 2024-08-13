@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import style from "./styles.module.scss";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,36 @@ import {
 const Home = () => {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({});
+
+  // TODO: use proper type for event
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    // const name = event.target.name;
+    // const value = event.target.value;
+
+    // console.log({ name, value });
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // TODO: implement real authentication
+  const authenticateUser = async (data) => {
+    return true;
+
+    // const url = "http://testurl.com/login";
+    // const response: any = await fetch(url, {
+    //   method: "POST",
+    //   body: data,
+    // });
+
+    // return response?.isAuthenticated;
+    // TODO: add a pop up on successful login
+  };
+
+  // console.log({ formData });
+
   return (
     <div className={`${style.background} h-full flex gap-4 p-12 text-white`}>
       <div className="flex-1 flex flex-col gap-4 justify-center">
@@ -44,17 +74,24 @@ const Home = () => {
           <h4 className="text-lg">Please enter your login details.</h4>
           <form
             action=""
-            onSubmit={() => {
-              //TODO: show handling form data and submitting form Data
-              navigate("/dashboard");
+            onSubmit={(event) => {
+              event.preventDefault();
+              const isAuthenticated = authenticateUser(formData);
+              if (isAuthenticated) {
+                navigate("/dashboard");
+              }
             }}
+            // method=""
+            // TODO: url? for request
           >
             <div className="my-4">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
+                name="email"
                 placeholder="Enter Your Email"
+                onChange={handleChange}
                 required
               />
             </div>
@@ -64,7 +101,9 @@ const Home = () => {
               <Input
                 id="password"
                 type="password"
+                name="password"
                 placeholder="Enter Your Password"
+                onChange={handleChange}
                 required
               />
             </div>
