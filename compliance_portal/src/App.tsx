@@ -5,10 +5,15 @@ import "./App.css";
 import { Button } from "@/components/ui/button";
 import RoutesWrapper from "./routes";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 function App() {
+  const queryClient = new QueryClient();
   return (
     <>
-      <RoutesWrapper />
+      <QueryClientProvider client={queryClient}>
+        <RoutesWrapper />
+      </QueryClientProvider>
     </>
   );
 }

@@ -26,7 +26,7 @@ const Home = () => {
   const [formData, setFormData] = useState({});
 
   // TODO: use proper type for event
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     // const name = event.target.name;

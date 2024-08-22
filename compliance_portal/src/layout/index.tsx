@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 // import logo from "../../../assets/lban-logo_white.png"
 
-const Layout = ({ children }) => {
+const Layout = ({ title, children }) => {
   return (
     <div className="flex h-full">
       {/* site navigation bar */}
@@ -54,7 +54,7 @@ const Layout = ({ children }) => {
       <div className="w-full p-4">
         {/* site header */}
         <div className="flex justify-between mb-8">
-          <h3 className="text-3xl font-medium">Dashboard</h3>
+          <h3 className="text-3xl font-medium">{title}</h3>
           <div className="flex gap-2 items-center">
             <div className="w-4 h-4 border-2 border-green-100 rounded-full bg-green-500"></div>
             <h5 className="text-lg font-medium">Hi John!</h5>

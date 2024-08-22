@@ -14,7 +14,7 @@ import DashboardCard from "@/components/custom/DashboardCard";
 
 const Dashboard = () => {
   return (
-    <Layout>
+    <Layout title="Dashboard">
       <h2>Dasboard Page Content</h2>
 
       {/* card container */}
@@ -26,17 +26,37 @@ const Dashboard = () => {
           icon={<GitGraph />}
         />
         <DashboardCard
-          title={"Total No of QC Requests"}
+          title={"No of Created Gates"}
           number={40}
           icon={<GitGraph />}
         />
         <DashboardCard
-          title={"Total No of QC Requests"}
+          title={"No of Created Conformance Level"}
           number={40}
           icon={<GitGraph />}
         />
         <DashboardCard
-          title={"Total No of QC Requests"}
+          title={"No of Created Stages"}
+          number={40}
+          icon={<GitGraph />}
+        />
+        <DashboardCard
+          title={"No  of Created Status"}
+          number={40}
+          icon={<GitGraph />}
+        />
+        <DashboardCard
+          title={"No Created Initiative Type"}
+          number={40}
+          icon={<GitGraph />}
+        />
+        <DashboardCard
+          title={"No of Qa Engineers"}
+          number={40}
+          icon={<GitGraph />}
+        />
+        <DashboardCard
+          title={"No of Created Criteria"}
           number={40}
           icon={<GitGraph />}
         />
