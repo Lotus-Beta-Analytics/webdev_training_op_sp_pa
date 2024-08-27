@@ -1,7 +1,7 @@
 // HTTP Methods
 // GET POST PATCH PUT DELETE OPTIONS HEAD
 
-// TODO: using react query for data fetching and caching
+// using react query for data fetching and caching
 
 // get compliance
 export const getInititives = async () => {

@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAddInitiative, useInitiatives } from "@/hooks/Initiative";
+// import { useAddInitiative, useInitiatives } from "@/hooks/initiative";
 import {
   Dialog,
   DialogContent,
@@ -30,17 +30,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import hooks from "@/hooks";
 
 const Initiatives = () => {
-  const { data: initiativeList, isError } = useInitiatives();
+  const { data: initiativeList } = hooks.useInitiatives();
+  const { data: types } = hooks.useTypes();
+  const { data: statuses } = hooks.useStatuses();
+  const { data: users } = hooks.useUsers();
 
-  // const [formData, setFormData] = useState({} as any);
+  const [formData, setFormData] = useState({} as any);
 
-  ("use client");
+  // ("use client");
 
   const formSchema = z.object({
     initiative: z.string().min(3, "Minimum of 3 characters"),
@@ -62,7 +73,7 @@ const Initiatives = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.log({ values });
   }
   const {
     mutate,
@@ -70,7 +81,7 @@ const Initiatives = () => {
     isSuccess,
     error,
     reset,
-  } = useAddInitiative();
+  } = hooks.useAddInitiative();
 
   if (isError) {
     console.log(`Error feching data ${error}`);
@@ -82,9 +93,9 @@ const Initiatives = () => {
   //   setFormData({ ...formData, [name]: value });
   // };
 
-  // const handleChange = ({target: {name, value}}) => {
-  //   setFormData({ ...formData, [name]: value });
-  // };
+  const handleChange = ({ target: { name, value } }) => {
+    setFormData({ ...formData, [name]: value });
+  };
 
   // // handleChange and handleChangeOld are equivalent
 
@@ -95,6 +106,12 @@ const Initiatives = () => {
   //   mutate(payload);
   // };
 
+  // "title": "Initiative 4",
+  //   "type": "62476993a167a2cb4b16ee2e",
+  //   "status": "62476993a167a2cb4b16ee2e",
+  //   "qualityAssuranceEngineer": "62476993a167a2cb4b16ee2e"
+
+  console.log({ formData });
   return (
     <Layout title={"Initiatives"}>
       <div className="flex justify-between">
@@ -121,7 +138,7 @@ const Initiatives = () => {
               >
                 <FormField
                   control={form.control}
-                  name="initiative"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Initiative</FormLabel>
@@ -135,12 +152,21 @@ const Initiatives = () => {
                 />
                 <FormField
                   control={form.control}
-                  name="qaEngineer"
+                  name="status"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>QA Engineer</FormLabel>
+                      <FormLabel>Status</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Select>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       {/* <FormDescription></FormDescription> */}
                       <FormMessage />
@@ -149,12 +175,21 @@ const Initiatives = () => {
                 />
                 <FormField
                   control={form.control}
-                  name="date"
+                  name="qualityAssuranceEngineer"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Date</FormLabel>
+                      <FormLabel>QA Engineer</FormLabel>
                       <FormControl>
-                        <Input type="datetime-local" {...field} />
+                        <Select>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="QA Engineer" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       {/* <FormDescription>
                         This is your public display name.
@@ -163,7 +198,32 @@ const Initiatives = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Submit</Button>
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Intiative Type</FormLabel>
+                      <FormControl>
+                        <Select>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Initiative Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      {/* <FormDescription>
+                        This is your public display name.
+                      </FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* <Button type="submit">Submit</Button> */}
               </form>
             </Form>
 
@@ -213,7 +273,7 @@ const Initiatives = () => {
               </div>
             </form> */}
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Submit</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
