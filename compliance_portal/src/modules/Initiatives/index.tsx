@@ -44,37 +44,13 @@ import { z } from "zod";
 import hooks from "@/hooks";
 
 const Initiatives = () => {
-  const { data: initiativeList } = hooks.useInitiatives();
+  const { data: initiativeList, isError } = hooks.useInitiatives();
   const { data: types } = hooks.useTypes();
   const { data: statuses } = hooks.useStatuses();
   const { data: users } = hooks.useUsers();
 
   const [formData, setFormData] = useState({} as any);
 
-  // ("use client");
-
-  const formSchema = z.object({
-    initiative: z.string().min(3, "Minimum of 3 characters"),
-    qaEngineer: z.string(),
-    date: z.string(),
-  });
-
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      initiative: "",
-      qaEngineer: "",
-      date: "",
-    },
-  });
-
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log({ values });
-  }
   const {
     mutate,
     isError: isMutateError,
@@ -83,21 +59,34 @@ const Initiatives = () => {
     reset,
   } = hooks.useAddInitiative();
 
+  const formSchema = z.object({
+    title: z.string().min(3, "Minimum of 3 characters"),
+    qualityAssuranceEngineer: z.string(),
+    type: z.string(),
+    status: z.string(),
+  });
+
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {},
+  });
+
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log({ values });
+    mutate(values);
+  }
+
   if (isError) {
     console.log(`Error feching data ${error}`);
   }
 
-  // const handleChangeOld = (event) => {
-  //   const name = event.target.name;
-  //   const value = event.target.value;
+  // const handleChange = ({ target: { name, value } }) => {
   //   setFormData({ ...formData, [name]: value });
   // };
-
-  const handleChange = ({ target: { name, value } }) => {
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // // handleChange and handleChangeOld are equivalent
 
   // const submitHandler = () => {
   //   const payload = {
@@ -106,12 +95,6 @@ const Initiatives = () => {
   //   mutate(payload);
   // };
 
-  // "title": "Initiative 4",
-  //   "type": "62476993a167a2cb4b16ee2e",
-  //   "status": "62476993a167a2cb4b16ee2e",
-  //   "qualityAssuranceEngineer": "62476993a167a2cb4b16ee2e"
-
-  console.log({ formData });
   return (
     <Layout title={"Initiatives"}>
       <div className="flex justify-between">
@@ -124,10 +107,7 @@ const Initiatives = () => {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add New Initiative</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </DialogDescription>
+              <DialogDescription>Create a new Initiative</DialogDescription>
             </DialogHeader>
 
             {/* using shadcn form */}
@@ -157,14 +137,18 @@ const Initiatives = () => {
                     <FormItem>
                       <FormLabel>Status</FormLabel>
                       <FormControl>
-                        <Select>
-                          <SelectTrigger className="w-[180px]">
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger className="">
                             <SelectValue placeholder="Status" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
+                            {statuses.map((status) => {
+                              return (
+                                <SelectItem key={status._id} value={status._id}>
+                                  {status.title}
+                                </SelectItem>
+                              );
+                            })}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -180,14 +164,23 @@ const Initiatives = () => {
                     <FormItem>
                       <FormLabel>QA Engineer</FormLabel>
                       <FormControl>
-                        <Select>
-                          <SelectTrigger className="w-[180px]">
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger className="">
                             <SelectValue placeholder="QA Engineer" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
+                            {users.map((user) => {
+                              if (
+                                user.role === "Engineer" ||
+                                user.role === "Manager"
+                              ) {
+                                return (
+                                  <SelectItem key={user._id} value={user._id}>
+                                    {user.fullname}
+                                  </SelectItem>
+                                );
+                              }
+                            })}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -205,14 +198,20 @@ const Initiatives = () => {
                     <FormItem>
                       <FormLabel>Intiative Type</FormLabel>
                       <FormControl>
-                        <Select>
-                          <SelectTrigger className="w-[180px]">
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger className="">
                             <SelectValue placeholder="Initiative Type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
+                            {types.map((type) => {
+                              if (type.isCustom === false) {
+                                return (
+                                  <SelectItem key={type._id} value={type._id}>
+                                    {type.title}
+                                  </SelectItem>
+                                );
+                              }
+                            })}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -224,6 +223,10 @@ const Initiatives = () => {
                   )}
                 />
                 {/* <Button type="submit">Submit</Button> */}
+
+                <DialogFooter>
+                  <Button type="submit">Submit</Button>
+                </DialogFooter>
               </form>
             </Form>
 
@@ -272,9 +275,6 @@ const Initiatives = () => {
                 <button type="submit">Submit in form</button>
               </div>
             </form> */}
-            <DialogFooter>
-              <Button type="submit">Submit</Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
