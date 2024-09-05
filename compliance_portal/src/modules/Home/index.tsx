@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import style from "./styles.module.scss";
 import { Button } from "@/components/ui/button";
@@ -19,11 +19,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import hooks from "@/hooks";
+import { isAuthenticated } from "@/utils/authUtils";
 
 const Home = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuthenticated()) {
+      console.log("user is authenticated!!!");
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   const [formData, setFormData] = useState({});
+
+  const { mutate, isSuccess, isError, error, reset } = hooks.useLogin();
 
   // TODO: use proper type for event
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,21 +48,19 @@ const Home = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // TODO: implement real authentication
-  const authenticateUser = async (data) => {
-    return true;
-
-    // const url = "http://testurl.com/login";
-    // const response: any = await fetch(url, {
-    //   method: "POST",
-    //   body: data,
-    // });
-
-    // return response?.isAuthenticated;
-    // TODO: add a pop up on successful login
+  const authenticateUser = () => {
+    mutate(formData);
   };
 
-  // console.log({ formData });
+  if (isSuccess) {
+    reset();
+    navigate("/dashboard");
+  }
+
+  if (isError) {
+    reset();
+    console.log(`Authentication Error: ${error}`);
+  }
 
   return (
     <div className={`${style.background} h-full flex gap-4 p-12 text-white`}>
@@ -76,10 +85,7 @@ const Home = () => {
             action=""
             onSubmit={(event) => {
               event.preventDefault();
-              const isAuthenticated = authenticateUser(formData);
-              if (isAuthenticated) {
-                navigate("/dashboard");
-              }
+              authenticateUser();
             }}
             // method=""
             // TODO: url? for request

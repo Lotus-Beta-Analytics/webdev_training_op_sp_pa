@@ -1,3 +1,4 @@
+import { jsonHeaders } from "@/utils/fetchUtils";
 import {
   useQuery,
   useMutation,
@@ -6,33 +7,65 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 
+// TODO: go over types and interfaces
+type id = string | number;
+interface IInitiative {
+  _id?: id;
+}
+
 export const getInititives = async () => {
   const url = "https://lbansdlc.azurewebsites.net/api/v1/initiative";
   const response = await fetch(url, {
     method: "GET",
   });
-
   const data = await response.json();
 
-  const intitatives = data.data;
-
-  return intitatives;
+  return data.data;
 };
 
-export const createInitiative = async (formData) => {
-  console.log({ formData });
+export const getSingleInititives = async (id: id) => {
+  const url = `https://lbansdlc.azurewebsites.net/api/v1/initiative/${id}`;
+  const response = await fetch(url, {
+    method: "GET",
+  });
+  const data = await response.json();
+
+  return data.data;
+};
+
+export const createInitiative = async (formData: IInitiative) => {
   const url = "https://lbansdlc.azurewebsites.net/api/v1/initiative";
-  // const response = await fetch(url, {
-  //   method: "POST",
-  //   body: formData,
-  //   // TODO: auth in fetch
-  // });
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(formData),
+    headers: jsonHeaders,
+  });
+  const data = await response.json();
 
-  // const data = await response.json();
+  return data.data;
+};
 
-  // const intitative = data.data;
+export const updateInitiative = async (formData: IInitiative) => {
+  const url = `https://lbansdlc.azurewebsites.net/api/v1/initiative/${formData._id}`;
+  const response = await fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(formData),
+    headers: jsonHeaders,
+  });
+  const data = await response.json();
 
-  // return intitative;
+  return data.data;
+};
+
+export const deleteInitiative = async (id: id) => {
+  const url = `https://lbansdlc.azurewebsites.net/api/v1/initiative/${id}`;
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: jsonHeaders,
+  });
+  const data = await response.json();
+
+  return data;
 };
 
 export const useInitiatives = () => {
@@ -43,11 +76,40 @@ export const useInitiatives = () => {
   });
 };
 
+export const useSingleInitiatives = (id: id) => {
+  return useQuery({
+    initialData: {},
+    queryKey: ["initiative", id],
+    queryFn: () => getSingleInititives(id),
+  });
+};
+
 export const useAddInitiative = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createInitiative,
-    mutationKey: ["initiative-create"], // what does this do
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["initiative"] });
+    },
+    onError: () => {},
+  });
+};
+
+export const useUpdateInitiative = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateInitiative,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["initiative"] });
+    },
+    onError: () => {},
+  });
+};
+
+export const useDeleteInitiative = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteInitiative,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["initiative"] });
     },

@@ -8,6 +8,7 @@ import {
   LogOutIcon,
   LucideGitGraph,
 } from "lucide-react";
+import { logout } from "@/hooks/auth";
 // import logo from "../../../assets/lban-logo_white.png"
 
 const Layout = ({ title, children }) => {
@@ -44,6 +45,7 @@ const Layout = ({ title, children }) => {
           <Link
             to={"/"}
             className="mt-8 py-3 pl-8 hover:bg-[#FFFFFF42] hover:border-l-4"
+            onClick={logout}
           >
             <div className="flex gap-2 items-center">
               <LogOutIcon /> Logout
