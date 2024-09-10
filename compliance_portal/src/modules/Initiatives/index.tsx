@@ -105,6 +105,21 @@ const Initiatives = () => {
   //   mutate(payload);
   // };
 
+  /*
+  "serialNumber"
+"title"
+
+"status" "title"
+"qualityAssuranceEngineer" "title"
+"type" "title"
+
+"session"
+"hasViolation"
+"conformanceStatus"
+"hasCustomType"
+"isCompleted"
+"createdAt"
+  */
   const columns = [
     { label: "Serial Number", field: "serialNumber" },
     { label: "Title", field: "title" },
