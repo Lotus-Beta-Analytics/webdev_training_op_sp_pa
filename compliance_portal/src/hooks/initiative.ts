@@ -1,3 +1,4 @@
+import { baseUrl } from "@/constants";
 import { jsonHeaders } from "@/utils/fetchUtils";
 import {
   useQuery,
@@ -9,12 +10,12 @@ import {
 
 // TODO: go over types and interfaces
 type id = string | number;
-interface IInitiative {
-  _id?: id;
-}
+// interface IInitiative {
+//   _id?: id;
+// }
 
 export const getInititives = async () => {
-  const url = "https://lbansdlc.azurewebsites.net/api/v1/initiative";
+  const url = `${baseUrl}/api/v1/initiative`;
   const response = await fetch(url, {
     method: "GET",
   });
@@ -24,7 +25,7 @@ export const getInititives = async () => {
 };
 
 export const getSingleInititives = async (id: id) => {
-  const url = `https://lbansdlc.azurewebsites.net/api/v1/initiative/${id}`;
+  const url = `${baseUrl}/api/v1/initiative/${id}`;
   const response = await fetch(url, {
     method: "GET",
   });
@@ -33,8 +34,8 @@ export const getSingleInititives = async (id: id) => {
   return data.data;
 };
 
-export const createInitiative = async (formData: IInitiative) => {
-  const url = "https://lbansdlc.azurewebsites.net/api/v1/initiative";
+export const createInitiative = async (formData: any) => {
+  const url = `${baseUrl}/api/v1/initiative`;
   const response = await fetch(url, {
     method: "POST",
     body: JSON.stringify(formData),
@@ -45,8 +46,8 @@ export const createInitiative = async (formData: IInitiative) => {
   return data.data;
 };
 
-export const updateInitiative = async (formData: IInitiative) => {
-  const url = `https://lbansdlc.azurewebsites.net/api/v1/initiative/${formData._id}`;
+export const updateInitiative = async (formData: any) => {
+  const url = `${baseUrl}/api/v1/initiative/${formData._id}`;
   const response = await fetch(url, {
     method: "PATCH",
     body: JSON.stringify(formData),
@@ -58,7 +59,7 @@ export const updateInitiative = async (formData: IInitiative) => {
 };
 
 export const deleteInitiative = async (id: id) => {
-  const url = `https://lbansdlc.azurewebsites.net/api/v1/initiative/${id}`;
+  const url = `${baseUrl}/api/v1/initiative/${id}`;
   const response = await fetch(url, {
     method: "DELETE",
     headers: jsonHeaders,

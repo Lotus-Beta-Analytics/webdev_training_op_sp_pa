@@ -13,6 +13,7 @@ import {
 // import { useAddInitiative, useInitiatives } from "@/hooks/initiative";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -42,6 +43,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import hooks from "@/hooks";
+import TableComponent from "@/components/custom/TableComponent";
 
 const Initiatives = () => {
   const { data: initiativeList, isError } = hooks.useInitiatives();
@@ -50,6 +52,7 @@ const Initiatives = () => {
   const { data: users } = hooks.useUsers();
 
   const [formData, setFormData] = useState({} as any);
+  const [open, setOpen] = useState(false);
 
   const {
     mutate,
@@ -84,6 +87,13 @@ const Initiatives = () => {
     console.log(`Error feching data ${error}`);
   }
 
+  if (isSuccess) {
+    // TODO: improve this
+    reset();
+    setOpen(false);
+    form.reset();
+  }
+
   // const handleChange = ({ target: { name, value } }) => {
   //   setFormData({ ...formData, [name]: value });
   // };
@@ -95,10 +105,31 @@ const Initiatives = () => {
   //   mutate(payload);
   // };
 
+  const columns = [
+    { label: "Serial Number", field: "serialNumber" },
+    { label: "Title", field: "title" },
+    {
+      label: "Session",
+      field: "session",
+      render: (data) => new Date(data?.session).toLocaleDateString(),
+    },
+    { label: "Violation", field: "hasViolation" },
+    { label: "Conformance Status", field: "conformanceStatus" },
+    { label: "Custom Type", field: "hasCustomType" },
+    { label: "Completed", field: "isCompleted" },
+    {
+      label: "Created At",
+      field: "createdAt",
+      render: (data) => new Date(data?.createdAt).toLocaleDateString(),
+    },
+  ];
+
+  console.log({ initiativeList });
+
   return (
     <Layout title={"Initiatives"}>
       <div className="flex justify-between">
-        <Dialog>
+        <Dialog onOpenChange={() => setOpen(true)} open={open}>
           <DialogTrigger>
             <Button variant={"default"} type="button">
               New Initiative
@@ -225,6 +256,13 @@ const Initiatives = () => {
                 {/* <Button type="submit">Submit</Button> */}
 
                 <DialogFooter>
+                  <Button
+                    onClick={() => setOpen(false)}
+                    type="button"
+                    variant="secondary"
+                  >
+                    Close
+                  </Button>
                   <Button type="submit">Submit</Button>
                 </DialogFooter>
               </form>
@@ -282,7 +320,8 @@ const Initiatives = () => {
       {
         // TODO: create a detailed table component
       }
-      <Table className="mt-8">
+      <TableComponent columns={columns} dataList={initiativeList} />
+      {/* <Table className="mt-8">
         <TableCaption>A list of your recent initiatives.</TableCaption>
         <TableHeader>
           <TableRow>
@@ -298,9 +337,9 @@ const Initiatives = () => {
               <TableCell className="font-medium">{initiative.title}</TableCell>
               <TableCell>{initiative.paymentStatus}</TableCell>
               <TableCell>{initiative.paymentMethod}</TableCell>
-              {/* <TableCell className="text-right">
+              <TableCell className="text-right">
                 {initiative.status.title}
-              </TableCell> */}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -310,7 +349,7 @@ const Initiatives = () => {
             <TableCell className="text-right">$2,500.00</TableCell>
           </TableRow>
         </TableFooter>
-      </Table>
+      </Table> */}
 
       <Dialog />
 
