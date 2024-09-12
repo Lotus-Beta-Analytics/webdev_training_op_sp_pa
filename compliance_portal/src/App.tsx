@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import RoutesWrapper from "./routes";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   const queryClient = new QueryClient();
@@ -13,6 +14,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <RoutesWrapper />
+        <Toaster />
       </QueryClientProvider>
     </>
   );

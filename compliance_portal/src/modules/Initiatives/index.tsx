@@ -44,8 +44,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import hooks from "@/hooks";
 import TableComponent from "@/components/custom/TableComponent";
+import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
+import { useIsMutating } from "@tanstack/react-query";
 
 const Initiatives = () => {
+  const isLoading = Boolean(useIsMutating());
+
   const { data: initiativeList, isError } = hooks.useInitiatives();
   const { data: types } = hooks.useTypes();
   const { data: statuses } = hooks.useStatuses();
@@ -53,6 +58,7 @@ const Initiatives = () => {
 
   const [formData, setFormData] = useState({} as any);
   const [open, setOpen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   const {
     mutate,
@@ -79,7 +85,6 @@ const Initiatives = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log({ values });
     mutate(values);
   }
 
@@ -88,10 +93,19 @@ const Initiatives = () => {
   }
 
   if (isSuccess) {
-    // TODO: improve this
     reset();
     setOpen(false);
     form.reset();
+    setShowNotification(true);
+  }
+
+  if (isMutateError) {
+    reset();
+    form.reset();
+    toast("Error Creating Initiative", {
+      duration: 3000,
+      position: "top-right",
+    });
   }
 
   // const handleChange = ({ target: { name, value } }) => {
@@ -139,12 +153,13 @@ const Initiatives = () => {
     },
   ];
 
-  console.log({ initiativeList });
+  console.log({ open, showNotification });
 
   return (
     <Layout title={"Initiatives"}>
       <div className="flex justify-between">
-        <Dialog onOpenChange={() => setOpen(true)} open={open}>
+        {/* <Dialog onOpenChange={() => setOpen(true)} open={open}> */}
+        <Dialog onOpenChange={setOpen} open={open}>
           <DialogTrigger>
             <Button variant={"default"} type="button">
               New Initiative
@@ -272,13 +287,19 @@ const Initiatives = () => {
 
                 <DialogFooter>
                   <Button
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false);
+                      // setShowNotification(true);
+                    }}
                     type="button"
                     variant="secondary"
                   >
                     Close
                   </Button>
-                  <Button type="submit">Submit</Button>
+                  <Button type="submit" disabled={isLoading}>
+                    Submit{" "}
+                    {isLoading && <LoaderCircle className="animate-spin" />}
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>
@@ -335,7 +356,9 @@ const Initiatives = () => {
       {
         // TODO: create a detailed table component
       }
-      <TableComponent columns={columns} dataList={initiativeList} />
+      <div className="py-8">
+        <TableComponent columns={columns} dataList={initiativeList} />
+      </div>
       {/* <Table className="mt-8">
         <TableCaption>A list of your recent initiatives.</TableCaption>
         <TableHeader>
@@ -366,11 +389,45 @@ const Initiatives = () => {
         </TableFooter>
       </Table> */}
 
-      <Dialog />
+      {/* <Dialog /> */}
 
       {/* <Button variant={"default"} onClick={submitHandler}>
         Submit
       </Button> */}
+
+      {/* for pop up notification */}
+      <Dialog
+        key="successNotification"
+        onOpenChange={setShowNotification}
+        open={showNotification}
+      >
+        {/* <DialogTrigger>
+          <Button variant={"default"} type="button">
+            New Initiative
+          </Button>
+        </DialogTrigger> */}
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Success</DialogTitle>
+            <DialogDescription>
+              Initiative Created Successfully
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowNotification(false);
+              }}
+              type="button"
+            >
+              Okay
+            </Button>
+            {/* <Button type="submit" disabled={isLoading}>
+              Submit {isLoading && <LoaderCircle className="animate-spin" />}
+            </Button> */}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };

@@ -21,9 +21,14 @@ import {
 } from "@/components/ui/select";
 import hooks from "@/hooks";
 import { isAuthenticated } from "@/utils/authUtils";
+import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
+import { useIsMutating } from "@tanstack/react-query";
 
 const Home = () => {
   const navigate = useNavigate();
+  const isMutating = useIsMutating();
+  const isLoading = Boolean(isMutating);
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -54,6 +59,15 @@ const Home = () => {
 
   if (isSuccess) {
     reset();
+    toast("Login Successful", {
+      // description: new Date().toLocaleString(),
+      // action: {
+      //   label: "OK",
+      //   onClick: () => console.log("OK"),
+      // },
+      duration: 3000,
+      position: "top-right",
+    });
     navigate("/dashboard");
   }
 
@@ -115,8 +129,8 @@ const Home = () => {
             </div>
 
             <div className="flex justify-end">
-              <Button variant={"default"} type="submit">
-                Login
+              <Button variant={"default"} type="submit" disabled={isLoading}>
+                Login {isLoading && <LoaderCircle className="animate-spin" />}
               </Button>
             </div>
           </form>
